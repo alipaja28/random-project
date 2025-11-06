@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>hai hai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fff5f8;
+      --card: #ffffff;
+      --accent: #ff4d6d;
+      --muted: #6b6b6b;
+      --shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    *{box-sizing:border-box;}
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background:linear-gradient(180deg,var(--bg),#fff);
+      color:#222;
+    }
+    .wrap{max-width:1100px;margin:36px auto;padding:28px}
+
+    .hero{display:flex;gap:24px;align-items:center;background:var(--card);padding:28px;border-radius:20px;box-shadow:var(--shadow);}
+    .hero .left{flex:1}
+    .title{font-family:'Playfair Display',serif;font-size:28px;margin:0 0 6px}
+    .subtitle{color:var(--muted);margin:0 0 14px}
+    .love-note{background:linear-gradient(90deg, rgba(255,77,109,0.06), rgba(255,77,109,0.02));padding:16px;border-radius:12px;border:1px solid rgba(255,77,109,0.06)}
+    .btn{display:inline-block;padding:10px 16px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;box-shadow:0 6px 18px rgba(255,77,109,0.22);cursor:pointer;border:0}
+
+    .gallery{margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .card{position:relative;background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer}
+    .card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease}
+    .card:hover img{transform:scale(1.05)}
+    .caption{position:absolute;left:12px;bottom:12px;padding:6px 10px;background:linear-gradient(90deg,rgba(0,0,0,0.45),rgba(0,0,0,0.25));color:#fff;border-radius:8px;font-size:13px}
+
+    footer{margin-top:22px;text-align:center;color:var(--muted);font-size:14px}
+
+    /* modal fullscreen */
+    .modal{position:fixed;inset:0;background:rgba(12,12,12,0.85);display:flex;align-items:center;justify-content:center;padding:0;opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:1000;}
+    .modal.open{opacity:1;pointer-events:auto}
+    .modal img{width:100vw;height:100vh;object-fit:contain;background:#000}
+    .meta{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#fff;font-size:16px;text-shadow:0 0 8px rgba(0,0,0,0.6)}
+    .meta button{background:rgba(0,0,0,0.4);border:0;color:#fff;padding:10px 14px;margin:0 5px;border-radius:50%;cursor:pointer;font-size:18px}
+
+    /* hearts */
+    .hearts{position:fixed;right:18px;bottom:18px;pointer-events:none;z-index:999;}
+    .heart{width:14px;height:14px;background:var(--accent);display:inline-block;transform:rotate(-45deg);border-radius:3px;position:relative;animation:float 3s infinite}
+    .heart:before,.heart:after{content:'';position:absolute;background:var(--accent);border-radius:50%;}
+    .heart:before{width:14px;height:14px;top:-7px;left:0}
+    .heart:after{width:14px;height:14px;left:7px;top:0}
+    @keyframes float{
+      0%{transform:translateY(0) scale(1) rotate(-45deg);}
+      50%{transform:translateY(-18px) scale(1.07) rotate(-45deg);}
+      100%{transform:translateY(0) scale(1) rotate(-45deg);}
+    }
+
+    @media (max-width:640px){.hero{flex-direction:column;align-items:flex-start}.modal img{height:100vh;width:100vw}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="left">
+        <h1 class="title">Post a Picture Random for bb 💕</h1>
+        <p class="subtitle">Sebuah ruang kecil untuk menyimpan momen indah kita — foto, cerita, dan kenangan.</p>
+        <div class="love-note">
+          <p style="margin:0;font-weight:600">Hai, <span id="namePlaceholder">bb</span></p>
+          <p style="margin:6px 0 0;color:var(--muted)">Aku menyusun kenangan ini agar kita selalu ingat betapa berharganya setiap detik bersama (anjay , maaf teks nya rada alay wwkwk)</p>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn" id="openAll">Lihat Semua Foto</button>
+        </div>
+      </div>
+      <div style="width:220px;display:flex;align-items:center;justify-content:center">
+        <div style="width:160px;height:160px;border-radius:50%;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.08)">
+          <img src="images/pap2.jpg" alt="pasangan" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="card" data-caption="Otw sekolah" data-src="images/pap1.jpg"><img src="images/pap1.jpg" alt="1"><div class="caption">Otw sekolah</div></div>
+      <div class="card" data-caption="" data-src="images/pap3.jpg"><img src="images/pap3.jpg" alt="2"><div class="caption"></div></div>
+      <div class="card" data-caption="" data-src="images/pap4.jpg"><img src="images/pap4.jpg" alt="3"><div class="caption"></div></div>
+      <div class="card" data-caption="Manyunn"ata-src="images/pap5.jpg"><img src="images/pap5.jpg" alt="4"><div class="caption">Manyunn </div></div>
+    </div>
+
+    <footer>
+      <small>Dibuat dengan perasaan oleh <strong>Alipio</strong> · <span id="year"></span></small>
+    </footer>
+  </div>
+
+  <!-- modal -->
+  <div class="modal" id="modal">
+    <img id="modalImg" src="" alt="">
+    <div class="meta">
+      <div id="modalCaption">Caption</div><br>
+      <button id="prev">◀</button>
+      <button id="next">▶</button>
+      <button id="closeBtn">✖</button>
+    </div>
+  </div>
+
+  <div class="hearts" aria-hidden>
+    <span class="heart" style="animation-delay:0s"></span>
+    <span class="heart" style="animation-delay:.5s;transform:scale(.9)"></span>
+    <span class="heart" style="animation-delay:1s;transform:scale(1.1)"></span>
+  </div>
+
+  <!-- musik romantis -->
+  <audio id="bgMusic" loop>
+    <source src="music/WhatsApp Audio 2025-11-06 at 11.52.17_17c7aaf9.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    document.getElementById('namePlaceholder').textContent = 'bb';
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalCaption = document.getElementById('modalCaption');
+    const closeBtn = document.getElementById('closeBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    let index = 0;
+    let slideShowInterval = null;
+
+    function openModal(i){
+      const c = cards[i];
+      modalImg.src = c.dataset.src;
+      modalCaption.textContent = c.dataset.caption || '';
+      modal.classList.add('open');
+      index = i;
+    }
+
+    cards.forEach((c,i)=> c.addEventListener('click', ()=> openModal(i)));
+
+    closeBtn.addEventListener('click', ()=> {
+      modal.classList.remove('open');
+      if(slideShowInterval){ clearInterval(slideShowInterval); slideShowInterval=null; }
+      bgMusic.pause();
+    });
+
+    document.getElementById('prev').addEventListener('click', ()=>{ index = (index-1 + cards.length)%cards.length; openModal(index); });
+    document.getElementById('next').addEventListener('click', ()=>{ index = (index+1)%cards.length; openModal(index); });
+
+    modal.addEventListener('click', (e)=>{ if(e.target===modal){ modal.classList.remove('open'); bgMusic.pause(); } });
+
+    document.addEventListener('keydown', (e)=>{
+      if(!modal.classList.contains('open')) return;
+      if(e.key==='ArrowLeft') document.getElementById('prev').click();
+      if(e.key==='ArrowRight') document.getElementById('next').click();
+      if(e.key==='Escape') document.getElementById('closeBtn').click();
+    });
+
+    // Scroll halus ke galeri
+    document.getElementById('openAll').addEventListener('click', () => {
+      document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // Tambahkan tombol slideshow
+    const slideBtn = document.createElement('button');
+    slideBtn.textContent = '💞 Slideshow';
+    slideBtn.className = 'btn';
+    slideBtn.style.margin = '10px 0 20px';
+    document.querySelector('.gallery').insertAdjacentElement('beforebegin', slideBtn);
+
+    slideBtn.addEventListener('click', () => {
+      let i = 0;
+      openModal(i);
+      bgMusic.play();
+      if(slideShowInterval){ clearInterval(slideShowInterval); }
+      slideShowInterval = setInterval(() => {
+        i = (i + 1) % cards.length;
+        openModal(i);
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
